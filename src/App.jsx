@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ReviewForm } from "./components/ReviewForm";
 import { ReviewList } from "./components/ReviewList";
 import { Toaster } from "react-hot-toast";
