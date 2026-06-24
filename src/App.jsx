@@ -34,22 +34,6 @@ export default function App() {
       console.error(e);
     }
   }
-  async function handleUpdate(id, data) {
-    try {
-      await updateReview(id, data);
-      loadReviews();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  async function handleDelete(id) {
-    try {
-      await deleteReview(id);
-      loadReviews();
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-8 text-sm">
@@ -151,11 +135,7 @@ export default function App() {
         onClose={() => setOpenForm(false)}
         onAdd={handleAdd}
       />
-      <ReviewList
-        reviews={reviews}
-        onUpdate={handleUpdate}
-        onDelete={handleDelete}
-      />
+      <ReviewList reviews={reviews} />
     </div>
   );
 }

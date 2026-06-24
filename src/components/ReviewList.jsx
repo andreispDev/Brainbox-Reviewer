@@ -8,30 +8,6 @@ export function ReviewList({ reviews = [], onDelete, onUpdate }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  const startEdit = (item) => {
-    setEditingId(item.id);
-    setEditTitle(item.title);
-  };
-
-  const saveEdit = async (id) => {
-    try {
-      await onUpdate(id, { title: editTitle });
-      setEditingId(null);
-      toast.success("Review updated");
-    } catch {
-      toast.error("Failed to update review");
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await onDelete(id);
-      toast.success("Review deleted");
-    } catch {
-      toast.error("Delete failed");
-    }
-  };
-
   const totalPages = Math.ceil(reviews.length / pageSize);
 
   const paginated = useMemo(() => {
