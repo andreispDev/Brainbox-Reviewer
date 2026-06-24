@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 import { ReviewForm } from "./components/ReviewForm";
 import { ReviewList } from "./components/ReviewList";
 import { Toaster } from "react-hot-toast";
-import {
-  getReviews,
-  createReview,
-  updateReview,
-  deleteReview,
-} from "./services/reviewService";
+import { getReviews, createReview } from "./services/reviewService";
 
 export default function App() {
   const [reviews, setReviews] = useState([]);
@@ -21,19 +16,38 @@ export default function App() {
 
   async function loadReviews() {
     try {
-      setReviews(await getReviews());
+      const data = await getReviews();
+      setReviews(data);
     } catch (e) {
       console.error(e);
     }
   }
+
   async function handleAdd(data) {
     try {
       await createReview(data);
-      loadReviews();
+      await loadReviews();
+      setOpenForm(false);
     } catch (e) {
       console.error(e);
     }
   }
+
+  const filteredReviews = reviews.filter((review) => {
+    const searchTerm = search.toLowerCase();
+
+    const matchesSearch =
+      review.title?.toLowerCase().includes(searchTerm) ||
+      review.description?.toLowerCase().includes(searchTerm) ||
+      review.day_name?.toLowerCase().includes(searchTerm);
+
+    const matchesSubject =
+      subject === "All" ||
+      review.subject === subject ||
+      review.title === subject;
+
+    return matchesSearch && matchesSubject;
+  });
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-8 text-sm">
@@ -57,6 +71,7 @@ export default function App() {
               />
             </svg>
           </div>
+
           <div>
             <h1 className="text-base font-medium text-neutral-900 leading-tight">
               BrainBox Reviewer
@@ -66,8 +81,10 @@ export default function App() {
             </p>
           </div>
         </div>
+
         <span className="text-xs text-neutral-400 bg-neutral-50 border border-neutral-200 rounded-md px-2.5 py-1">
-          {reviews.length} reviewer{reviews.length !== 1 ? "s" : ""}
+          {filteredReviews.length} reviewer
+          {filteredReviews.length !== 1 ? "s" : ""}
         </span>
       </div>
 
@@ -88,25 +105,28 @@ export default function App() {
                 d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
               />
             </svg>
+
             <input
               type="text"
-              placeholder="Search topic…"
+              placeholder="Search topic..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm border border-neutral-200 rounded-md bg-white text-neutral-800 placeholder-neutral-400 outline-none focus:ring-1 focus:ring-neutral-300 w-48"
+              className="pl-8 pr-3 py-1.5 text-sm border border-neutral-200 rounded-md bg-white text-neutral-800 placeholder-neutral-400 outline-none focus:ring-1 focus:ring-neutral-300 w-56"
             />
           </div>
+
           <select
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             className="text-sm border border-neutral-200 rounded-md px-2.5 py-1.5 bg-white text-neutral-700 outline-none focus:ring-1 focus:ring-neutral-300"
           >
-            <option>All</option>
-            <option>CSE</option>
-            <option>Mathematics</option>
-            <option>General Engineering</option>
+            <option value="All">All</option>
+            <option value="CSE">CSE</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="General Engineering">General Engineering</option>
           </select>
         </div>
+
         <button
           onClick={() => setOpenForm(true)}
           className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 transition-colors"
@@ -124,7 +144,7 @@ export default function App() {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Add review
+          Add Review
         </button>
       </div>
 
@@ -135,7 +155,8 @@ export default function App() {
         onClose={() => setOpenForm(false)}
         onAdd={handleAdd}
       />
-      <ReviewList reviews={reviews} />
+
+      <ReviewList reviews={filteredReviews} />
     </div>
   );
 }
