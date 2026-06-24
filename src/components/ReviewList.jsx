@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import toast from "react-hot-toast";
 
-export function ReviewList({ reviews = [], onDelete, onUpdate }) {
-  const [editingId, setEditingId] = useState(null);
-  const [editTitle, setEditTitle] = useState("");
+export function ReviewList({ reviews = [] }) {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -34,11 +31,12 @@ export function ReviewList({ reviews = [], onDelete, onUpdate }) {
             </th>
           </tr>
         </thead>
+
         <tbody>
           <AnimatePresence>
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-16 text-neutral-300">
+                <td colSpan={4} className="text-center py-16 text-neutral-300">
                   <div className="flex flex-col items-center gap-2">
                     <svg
                       className="w-8 h-8"
@@ -74,16 +72,7 @@ export function ReviewList({ reviews = [], onDelete, onUpdate }) {
                   </td>
 
                   <td className="px-4 py-3 font-medium text-neutral-800">
-                    {editingId === item.id ? (
-                      <input
-                        className="border border-neutral-200 rounded-md px-2 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-neutral-300"
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        autoFocus
-                      />
-                    ) : (
-                      item.title
-                    )}
+                    {item.title}
                   </td>
 
                   <td className="px-4 py-3 text-neutral-400 max-w-xs truncate">
@@ -111,13 +100,17 @@ export function ReviewList({ reviews = [], onDelete, onUpdate }) {
         </tbody>
       </table>
 
-      {/* Pagination footer */}
+      {/* Pagination */}
       <div className="flex items-center justify-between px-4 py-2.5 border-t border-neutral-100 bg-neutral-50">
         <span className="text-xs text-neutral-400">
           {reviews.length === 0
             ? "No results"
-            : `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, reviews.length)} of ${reviews.length}`}
+            : `${(page - 1) * pageSize + 1}–${Math.min(
+                page * pageSize,
+                reviews.length,
+              )} of ${reviews.length}`}
         </span>
+
         <div className="flex items-center gap-1">
           <button
             disabled={page === 1}
@@ -126,9 +119,11 @@ export function ReviewList({ reviews = [], onDelete, onUpdate }) {
           >
             Prev
           </button>
+
           <span className="text-xs text-neutral-400 px-2">
             {page} / {totalPages || 1}
           </span>
+
           <button
             disabled={page === totalPages || totalPages === 0}
             onClick={() => setPage((p) => p + 1)}
