@@ -122,9 +122,10 @@ export default function App() {
               className="shrink-0 text-sm border border-neutral-200 rounded-md px-2.5 py-1.5 bg-white text-neutral-700 outline-none focus:ring-1 focus:ring-neutral-300"
             >
               <option value="All">All</option>
-              <option value="CSE">CSE</option>
-              <option value="Mathematics">Math</option>
-              <option value="General Engineering">General</option>
+              <option value="Analytical">Analytical</option>
+              <option value="General Info">General Information</option>
+              <option value="Verbal Ability & Numerical">Verbal Ability</option>
+              <option value="Numerical Ability">Numerical Ability</option>
             </select>
           </div>
 
