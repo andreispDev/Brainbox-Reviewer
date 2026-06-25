@@ -13,7 +13,6 @@ export function ReviewForm({ onAdd, open, onClose }) {
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
   const resetForm = () =>
     setForm({ day_name: "", title: "", link: "", description: "" });
 
@@ -51,7 +50,7 @@ export function ReviewForm({ onAdd, open, onClose }) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-4 sm:pb-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -62,14 +61,14 @@ export function ReviewForm({ onAdd, open, onClose }) {
           {/* Modal */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ scale: 0.98, opacity: 0, y: 6 }}
+            initial={{ scale: 0.98, opacity: 0, y: 12 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.98, opacity: 0, y: 6 }}
+            exit={{ scale: 0.98, opacity: 0, y: 12 }}
             transition={{ duration: 0.15 }}
-            className="relative bg-white w-full max-w-md rounded-xl border border-neutral-200 p-6 text-sm z-10"
+            className="relative bg-white w-full max-w-md rounded-xl border border-neutral-200 p-5 sm:p-6 text-sm z-10"
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-start justify-between gap-3 mb-4">
               <div>
                 <h2 className="text-sm font-medium text-neutral-900">
                   Add review
@@ -81,7 +80,7 @@ export function ReviewForm({ onAdd, open, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="w-7 h-7 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50 transition text-base leading-none"
+                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50 transition text-base leading-none"
               >
                 ×
               </button>
@@ -91,7 +90,7 @@ export function ReviewForm({ onAdd, open, onClose }) {
 
             {/* Fields */}
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-neutral-500">
                     Day
@@ -148,18 +147,18 @@ export function ReviewForm({ onAdd, open, onClose }) {
             <div className="h-px bg-neutral-100 my-4" />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3.5 py-1.5 text-xs rounded-md border border-neutral-200 text-neutral-500 hover:bg-neutral-50 transition-colors"
+                className="w-full sm:w-auto px-3.5 py-2 sm:py-1.5 text-xs rounded-md border border-neutral-200 text-neutral-500 hover:bg-neutral-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-3.5 py-1.5 text-xs rounded-md bg-neutral-900 text-white hover:bg-neutral-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-3.5 py-2 sm:py-1.5 text-xs rounded-md bg-neutral-900 text-white hover:bg-neutral-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {loading ? "Adding…" : "Add review"}
               </button>
