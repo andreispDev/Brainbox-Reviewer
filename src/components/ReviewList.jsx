@@ -86,7 +86,7 @@ export function ReviewList({ reviews = [] }) {
                 <tr>
                   <td
                     colSpan={4}
-                    className="text-center py-16 text-neutral-300"
+                    className="text-center bg-white py-16 text-neutral-300"
                   >
                     <div className="flex flex-col items-center gap-2">
                       <svg
@@ -117,18 +117,18 @@ export function ReviewList({ reviews = [] }) {
                     onClick={() => setSelected(item)}
                     className="border-b border-neutral-100 last:border-0 hover:bg-neutral-50 transition-colors cursor-pointer"
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 bg-white">
                       <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-500 border border-blue-100 font-medium">
                         {item.day_name}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-medium text-neutral-800">
+                    <td className="px-4 py-3 bg-white font-medium text-neutral-800">
                       {item.title}
                     </td>
-                    <td className="px-4 py-3 text-neutral-400 max-w-xs truncate">
+                    <td className="px-4 py-3 bg-white text-neutral-400 max-w-xs truncate">
                       {item.description}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 bg-white">
                       {item.link ? (
                         <span className="text-xs text-neutral-500 underline underline-offset-2">
                           Open ↗
