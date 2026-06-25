@@ -3,7 +3,6 @@ import { ReviewForm } from "./components/ReviewForm";
 import { ReviewList } from "./components/ReviewList";
 import { Toaster } from "react-hot-toast";
 import { getReviews, createReview } from "./services/reviewService";
-import { div } from "framer-motion/client";
 
 export default function App() {
   const [reviews, setReviews] = useState([]);
