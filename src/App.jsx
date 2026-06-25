@@ -23,6 +23,10 @@ export default function App() {
     }
   }
 
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
   async function handleAdd(data) {
     try {
       await createReview(data);
