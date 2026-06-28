@@ -4,6 +4,14 @@ import { ReviewList } from "./components/ReviewList";
 import { Toaster } from "react-hot-toast";
 import { getReviews, createReview } from "./services/reviewService";
 
+const SUBJECTS = [
+  "All",
+  "Analytical",
+  "General Info",
+  "Verbal Ability & Numerical",
+  "Numerical Ability",
+];
+
 export default function App() {
   const [reviews, setReviews] = useState([]);
   const [openForm, setOpenForm] = useState(false);
@@ -22,10 +30,6 @@ export default function App() {
       console.error(e);
     }
   }
-
-  useEffect(() => {
-    loadReviews();
-  }, []);
 
   async function handleAdd(data) {
     try {
@@ -51,107 +55,118 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="max-w-3xl mx-auto text-sm">
+    <div
+      className="min-h-screen px-4 py-6"
+      style={{ backgroundColor: "#FBF8F3" }}
+    >
+      <div className="max-w-xl mx-auto">
         <Toaster position="top-right" />
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-neutral-200 bg-neutral-50 flex items-center justify-center">
-              <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-500"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                />
-              </svg>
+        <div className="flex items-start justify-between mb-6 gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+              style={{ backgroundColor: "#4A3728" }}
+            >
+              🧠
             </div>
             <div className="min-w-0">
-              <h1 className="text-sm sm:text-base font-medium text-neutral-900 leading-tight truncate">
+              <h1
+                className="text-base font-semibold leading-tight tracking-tight truncate"
+                style={{ color: "#2C1E14" }}
+              >
                 BrainBox Reviewer
               </h1>
-              <p className="text-xs text-neutral-400 mt-0.5 truncate">
+              <p
+                className="text-xs mt-0.5 truncate"
+                style={{ color: "#9C8270" }}
+              >
                 CS Engineering &amp; General Review
               </p>
             </div>
           </div>
-
-          <span className="shrink-0 ml-3 text-xs text-neutral-400 bg-neutral-50 border border-neutral-200 rounded-md px-2 sm:px-2.5 py-1 whitespace-nowrap">
-            {filteredReviews.length} item
+          <span
+            className="flex-shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border whitespace-nowrap"
+            style={{
+              backgroundColor: "#EDE4D8",
+              borderColor: "#D9CABC",
+              color: "#7A5C44",
+            }}
+          >
+            {filteredReviews.length} topic
             {filteredReviews.length !== 1 ? "s" : ""}
           </span>
         </div>
 
-        {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 sm:justify-between mb-4">
-          {/* Search + filter row */}
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="relative flex-1 sm:flex-none">
-              <svg
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search topic..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full sm:w-48 pl-8 pr-3 py-1.5 text-sm border border-neutral-200 rounded-md bg-white text-neutral-800 placeholder-neutral-400 outline-none focus:ring-1 focus:ring-neutral-300"
-              />
-            </div>
-
-            <select
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="shrink-0 text-sm border border-neutral-200 rounded-md px-2.5 py-1.5 bg-white text-neutral-700 outline-none focus:ring-1 focus:ring-neutral-300"
+        {/* Subject chips */}
+        <div className="flex gap-2 overflow-x-auto pb-1 mb-4 scrollbar-hide">
+          {SUBJECTS.map((s) => (
+            <button
+              key={s}
+              onClick={() => setSubject(s)}
+              className="flex-shrink-0 text-xs font-medium px-4 py-1.5 rounded-full border-2 transition-all duration-150 whitespace-nowrap"
+              style={
+                subject === s
+                  ? {
+                      backgroundColor: "#4A3728",
+                      color: "#F5EDE4",
+                      borderColor: "#4A3728",
+                    }
+                  : {
+                      backgroundColor: "#fff",
+                      color: "#7A5C44",
+                      borderColor: "#DDD0C4",
+                    }
+              }
             >
-              <option value="All">All</option>
-              <option value="Analytical">Analytical</option>
-              <option value="General Info">General Information</option>
-              <option value="Verbal Ability & Numerical">Verbal Ability</option>
-              <option value="Numerical Ability">Numerical Ability</option>
-            </select>
-          </div>
+              {s === "Verbal Ability & Numerical"
+                ? "Verbal"
+                : s === "Numerical Ability"
+                  ? "Numerical"
+                  : s}
+            </button>
+          ))}
+        </div>
 
-          {/* Add button — full width on mobile */}
+        {/* Toolbar */}
+        <div className="flex gap-2 mb-5 items-center">
+          <div className="relative flex-1">
+            <span
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+              style={{ color: "#B09880" }}
+            >
+              🔍
+            </span>
+            <input
+              type="text"
+              placeholder="Search topics…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border-2 outline-none transition-colors"
+              style={{
+                backgroundColor: "#fff",
+                borderColor: "#DDD0C4",
+                color: "#2C1E14",
+              }}
+            />
+          </div>
           <button
             onClick={() => setOpenForm(true)}
-            className="flex items-center justify-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 transition-colors sm:ml-2 w-full sm:w-auto"
+            className="flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-4 py-2.5 rounded-xl transition-opacity active:opacity-80"
+            style={{ backgroundColor: "#4A3728", color: "#F5EDE4" }}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add review
+            ＋ Add
           </button>
         </div>
 
-        <hr className="border-t border-neutral-100 mb-4" />
+        {/* Section label */}
+        <p
+          className="text-xs font-semibold uppercase tracking-widest mb-3"
+          style={{ color: "#B09880", letterSpacing: "0.07em" }}
+        >
+          Review items
+        </p>
 
         <ReviewForm
           open={openForm}
