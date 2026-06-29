@@ -158,10 +158,13 @@ export function ReviewForm({ onAdd, open, onClose }) {
                     </option>
                     <option value="Analytical">Analytical</option>
                     <option value="General Info">General Info</option>
-                    <option value="Verbal Ability & Numerical">
-                      Verbal Ability
+                    <option value="Verbal Ability & Numerical Ability">
+                      Verbal Ability & Numerical Ability
                     </option>
-                    <option value="Numerical Ability">Numerical</option>
+                    <option value="Verbal Ability">Verbal Ability Only</option>
+                    <option value="Numerical Ability">
+                      Numerical Ability Only
+                    </option>
                   </select>
                 </div>
               </div>
