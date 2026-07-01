@@ -41,7 +41,7 @@ function SubjectTag({ subject }) {
 export function ReviewList({ reviews = [] }) {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
-  const pageSize = 5;
+  const pageSize = 4;
 
   const totalPages = Math.ceil(reviews.length / pageSize);
 
