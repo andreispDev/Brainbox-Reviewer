@@ -8,8 +8,9 @@ const SUBJECTS = [
   "All",
   "Analytical",
   "General Info",
-  "Verbal Ability & Numerical",
-  "Numerical Ability",
+  "Verbal",
+  "Verbal & Numerical",
+  "Numerical",
 ];
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
   const [openForm, setOpenForm] = useState(false);
   const [search, setSearch] = useState("");
   const [subject, setSubject] = useState("All");
+  const [week, setWeek] = useState("All");
 
   useEffect(() => {
     loadReviews();
@@ -44,15 +46,23 @@ export default function App() {
   const filteredReviews = reviews.filter((review) => {
     const searchTerm = search.toLowerCase();
     const matchesSearch =
-      review.title?.toLowerCase().includes(searchTerm) ||
+      review.category?.toLowerCase().includes(searchTerm) ||
       review.description?.toLowerCase().includes(searchTerm) ||
       review.day_name?.toLowerCase().includes(searchTerm);
-    const matchesSubject =
-      subject === "All" ||
-      review.subject === subject ||
-      review.title === subject;
-    return matchesSearch && matchesSubject;
+    const matchesSubject = subject === "All" || review.category === subject;
+    const matchesWeek = week === "All" || String(review.week) === week;
+    return matchesSearch && matchesSubject && matchesWeek;
   });
+
+  const weekOptions = [
+    ...new Set(reviews.map((r) => r.week).filter(Boolean)),
+  ].sort((a, b) => Number(a) - Number(b));
+
+  const selectClass = `
+    h-[38px] border-[1.5px] border-[#EDE4D8] rounded-xl px-3 text-sm
+    bg-[#FBF8F3] outline-none appearance-none cursor-pointer transition-colors
+    focus:border-[#C9B39E] focus:bg-white
+  `;
 
   return (
     <div
@@ -63,7 +73,7 @@ export default function App() {
         <Toaster position="top-right" />
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-6 gap-3">
+        <div className="flex items-center justify-between mb-5 gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
@@ -73,7 +83,7 @@ export default function App() {
             </div>
             <div className="min-w-0">
               <h1
-                className="text-base font-semibold leading-tight tracking-tight truncate"
+                className="text-[15px] font-semibold leading-tight tracking-tight truncate"
                 style={{ color: "#2C1E14" }}
               >
                 BrainBox Reviewer
@@ -99,41 +109,15 @@ export default function App() {
           </span>
         </div>
 
-        {/* Subject chips */}
-        <div className="flex gap-2 overflow-x-auto pb-1 mb-4 scrollbar-hide">
-          {SUBJECTS.map((s) => (
-            <button
-              key={s}
-              onClick={() => setSubject(s)}
-              className="flex-shrink-0 text-xs font-medium px-4 py-1.5 rounded-full border-2 transition-all duration-150 whitespace-nowrap"
-              style={
-                subject === s
-                  ? {
-                      backgroundColor: "#4A3728",
-                      color: "#F5EDE4",
-                      borderColor: "#4A3728",
-                    }
-                  : {
-                      backgroundColor: "#fff",
-                      color: "#7A5C44",
-                      borderColor: "#DDD0C4",
-                    }
-              }
-            >
-              {s === "Verbal Ability & Numerical"
-                ? "Verbal"
-                : s === "Numerical Ability"
-                  ? "Numerical"
-                  : s}
-            </button>
-          ))}
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex gap-2 mb-5 items-center">
-          <div className="relative flex-1">
+        {/* Filter bar */}
+        <div
+          className="flex items-center gap-2 p-2.5 rounded-2xl mb-5"
+          style={{ backgroundColor: "#fff", border: "1.5px solid #DDD0C4" }}
+        >
+          {/* Search */}
+          <div className="relative flex-1 min-w-0">
             <span
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none"
               style={{ color: "#B09880" }}
             >
               🔍
@@ -143,26 +127,66 @@ export default function App() {
               placeholder="Search topics…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border-2 outline-none transition-colors"
+              className="w-full h-[38px] pl-8 pr-3 text-sm rounded-xl border-[1.5px] outline-none transition-colors"
               style={{
-                backgroundColor: "#fff",
-                borderColor: "#DDD0C4",
+                backgroundColor: "#FBF8F3",
+                borderColor: "#EDE4D8",
                 color: "#2C1E14",
               }}
             />
           </div>
+
+          <div
+            className="w-px h-6 flex-shrink-0"
+            style={{ backgroundColor: "#EDE4D8" }}
+          />
+
+          {/* Week */}
+          <select
+            value={week}
+            onChange={(e) => setWeek(e.target.value)}
+            className={selectClass}
+            style={{ color: week === "All" ? "#B09880" : "#2C1E14" }}
+          >
+            <option value="All">All weeks</option>
+            {weekOptions.map((w) => (
+              <option key={w} value={String(w)}>
+                Week {w}
+              </option>
+            ))}
+          </select>
+
+          {/* Subject */}
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className={selectClass}
+            style={{ color: subject === "All" ? "#B09880" : "#2C1E14" }}
+          >
+            {SUBJECTS.map((s) => (
+              <option key={s} value={s}>
+                {s === "All" ? "All subjects" : s}
+              </option>
+            ))}
+          </select>
+
+          <div
+            className="w-px h-6 flex-shrink-0"
+            style={{ backgroundColor: "#EDE4D8" }}
+          />
+
+          {/* Add */}
           <button
             onClick={() => setOpenForm(true)}
-            className="flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-4 py-2.5 rounded-xl transition-opacity active:opacity-80"
+            className="flex-shrink-0 h-[38px] flex items-center gap-1.5 text-sm font-medium px-4 rounded-xl transition-opacity active:opacity-80"
             style={{ backgroundColor: "#4A3728", color: "#F5EDE4" }}
           >
             ＋ Add
           </button>
         </div>
 
-        {/* Section label */}
         <p
-          className="text-xs font-semibold uppercase tracking-widest mb-3"
+          className="text-[10px] font-semibold uppercase tracking-widest mb-3"
           style={{ color: "#B09880", letterSpacing: "0.07em" }}
         >
           Review items

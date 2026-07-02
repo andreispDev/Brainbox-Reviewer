@@ -4,8 +4,9 @@ import toast from "react-hot-toast";
 
 export function ReviewForm({ onAdd, open, onClose }) {
   const [form, setForm] = useState({
+    week: "",
     day_name: "",
-    title: "",
+    category: "",
     link: "",
     description: "",
   });
@@ -14,12 +15,18 @@ export function ReviewForm({ onAdd, open, onClose }) {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
   const resetForm = () =>
-    setForm({ day_name: "", title: "", link: "", description: "" });
+    setForm({
+      week: "",
+      day_name: "",
+      category: "",
+      link: "",
+      description: "",
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.description) {
-      toast.error("Title and description are required");
+    if (!form.category || !form.description) {
+      toast.error("category and description are required");
       return;
     }
     try {
@@ -114,18 +121,21 @@ export function ReviewForm({ onAdd, open, onClose }) {
 
             {/* Fields */}
             <div className="space-y-3">
+              {/* Row 1: Week + Day */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label
                     className="text-xs font-semibold uppercase tracking-wide"
                     style={{ color: "#9C8270", letterSpacing: "0.06em" }}
                   >
-                    Day
+                    Week
                   </label>
                   <input
-                    name="day_name"
-                    placeholder="e.g. Monday"
-                    value={form.day_name}
+                    name="week"
+                    type="text"
+                    min={1}
+                    placeholder="e.g. 1"
+                    value={form.week}
                     onChange={handleChange}
                     className="w-full px-3 py-2.5 text-sm rounded-xl outline-none transition-colors"
                     style={{
@@ -135,40 +145,61 @@ export function ReviewForm({ onAdd, open, onClose }) {
                     }}
                   />
                 </div>
+
                 <div className="space-y-1.5">
                   <label
                     className="text-xs font-semibold uppercase tracking-wide"
                     style={{ color: "#9C8270", letterSpacing: "0.06em" }}
                   >
-                    Subject <span style={{ color: "#C0705A" }}>*</span>
+                    Day
                   </label>
-                  <select
-                    name="title"
-                    value={form.title}
+                  <input
+                    name="day_name"
+                    value={form.day_name}
                     onChange={handleChange}
                     className="w-full px-3 py-2.5 text-sm rounded-xl outline-none transition-colors appearance-none"
                     style={{
                       backgroundColor: "#fff",
                       border: "1.5px solid #DDD0C4",
-                      color: form.title ? "#2C1E14" : "#B09880",
+                      color: form.day_name ? "#2C1E14" : "#B09880",
                     }}
-                  >
-                    <option value="" disabled>
-                      Pick subject…
-                    </option>
-                    <option value="Analytical">Analytical</option>
-                    <option value="General Info">General Info</option>
-                    <option value="Verbal Ability & Numerical Ability">
-                      Verbal Ability & Numerical Ability
-                    </option>
-                    <option value="Verbal Ability">Verbal Ability Only</option>
-                    <option value="Numerical Ability">
-                      Numerical Ability Only
-                    </option>
-                  </select>
+                  />
                 </div>
               </div>
 
+              {/* Row 2: Subject — full width */}
+              <div className="space-y-1.5">
+                <label
+                  className="text-xs font-semibold uppercase tracking-wide"
+                  style={{ color: "#9C8270", letterSpacing: "0.06em" }}
+                >
+                  Subject <span style={{ color: "#C0705A" }}>*</span>
+                </label>
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2.5 text-sm rounded-xl outline-none transition-colors appearance-none"
+                  style={{
+                    backgroundColor: "#fff",
+                    border: "1.5px solid #DDD0C4",
+                    color: form.category ? "#2C1E14" : "#B09880",
+                  }}
+                >
+                  <option value="" disabled>
+                    Pick subject…
+                  </option>
+                  <option value="Analytical">Analytical</option>
+                  <option value="General Info">General Info</option>
+                  <option value="Verbal & Numerical">
+                    Verbal and Numerical
+                  </option>
+                  <option value="Verbal">Verbal only</option>
+                  <option value="Numerical">Numerical only</option>
+                </select>
+              </div>
+
+              {/* Row 3: Link — full width */}
               <div className="space-y-1.5">
                 <label
                   className="text-xs font-semibold uppercase tracking-wide"
@@ -190,6 +221,7 @@ export function ReviewForm({ onAdd, open, onClose }) {
                 />
               </div>
 
+              {/* Row 4: Topic — full width */}
               <div className="space-y-1.5">
                 <label
                   className="text-xs font-semibold uppercase tracking-wide"

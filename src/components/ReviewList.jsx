@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const subjectColors = {
   Analytical: { bg: "#E8F0FE", color: "#2C4EA5", dot: "#4A6FD4" },
   "General Info": { bg: "#F3E8FE", color: "#6B35A5", dot: "#9B59D0" },
-  "Verbal Ability & Numerical": {
+  "Verbal & Numerical": {
     bg: "#E8F8F1",
     color: "#1B7A4A",
     dot: "#2EAD6A",
   },
-  "Numerical Ability": { bg: "#FFF3E0", color: "#B55A00", dot: "#E07B1A" },
+  Numerical: { bg: "#FFF3E0", color: "#B55A00", dot: "#E07B1A" },
 };
 
 function SubjectTag({ subject }) {
@@ -19,9 +19,9 @@ function SubjectTag({ subject }) {
     dot: "#B09880",
   };
   const label =
-    subject === "Verbal Ability & Numerical"
-      ? "Verbal"
-      : subject === "Numerical Ability"
+    subject === "Verbal & Numerical"
+      ? "Verbal & Numerical"
+      : subject === "Numerical"
         ? "Numerical"
         : subject || "General";
   return (
@@ -83,24 +83,25 @@ export function ReviewList({ reviews = [] }) {
                   border: "1.5px solid #EDE4D8",
                 }}
               >
-                {/* Day badge */}
-                <div
-                  className="flex-shrink-0 w-10 h-10 rounded-xl flex flex-col items-center justify-center"
-                  style={{ backgroundColor: "#EDE4D8" }}
-                >
-                  <span
-                    className="text-sm font-bold leading-none"
-                    style={{ color: "#4A3728" }}
+                {/* Week + Day badges */}
+                <div className="flex flex-col gap-1.5 flex-shrink-0">
+                  <div
+                    className="w-12 h-[38px] rounded-xl flex flex-col items-center justify-center"
+                    style={{ backgroundColor: "#EDE4D8" }}
                   >
-                    {item.day_name?.replace(/\D/g, "") || "—"}
-                  </span>
-                  <span
-                    className="text-[9px] font-semibold uppercase tracking-wide mt-0.5"
-                    style={{ color: "#9C8270" }}
-                  >
-                    {item.day_name?.replace(/\d/g, "").trim().slice(0, 3) ||
-                      "Day"}
-                  </span>
+                    <span
+                      className="text-[9px] font-semibold uppercase tracking-wide"
+                      style={{ color: "#9C8270" }}
+                    >
+                      Day
+                    </span>
+                    <span
+                      className="text-[14px] font-bold leading-none mt-0.5"
+                      style={{ color: "#4A3728" }}
+                    >
+                      {item.day_name?.slice(0, 3) || "—"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Left accent stripe */}
@@ -119,7 +120,7 @@ export function ReviewList({ reviews = [] }) {
                       className="text-sm font-semibold truncate leading-snug"
                       style={{ color: "#2C1E14" }}
                     >
-                      {item.title}
+                      {item.category}
                     </p>
                     <span
                       className="flex-shrink-0 text-base"
@@ -132,10 +133,10 @@ export function ReviewList({ reviews = [] }) {
                     className="text-xs mt-1 line-clamp-2 leading-relaxed"
                     style={{ color: "#7A5C44" }}
                   >
-                    {item.description}
+                    {item.topic}
                   </p>
                   <div className="mt-2">
-                    <SubjectTag subject={item.subject || item.title} />
+                    <SubjectTag subject={item.subject || item.category} />
                   </div>
                 </div>
               </motion.button>
@@ -228,11 +229,11 @@ export function ReviewList({ reviews = [] }) {
                       className="text-sm font-semibold leading-snug truncate"
                       style={{ color: "#2C1E14" }}
                     >
-                      {selected.title}
+                      {selected.category}
                     </h2>
                     <div className="mt-1">
                       <SubjectTag
-                        subject={selected.subject || selected.title}
+                        subject={selected.subject || selected.category}
                       />
                     </div>
                   </div>
@@ -255,42 +256,66 @@ export function ReviewList({ reviews = [] }) {
                 style={{ height: "1px", backgroundColor: "#EDE4D8" }}
               />
 
-              {/* Day row */}
-              {selected.day_name && (
-                <div className="flex items-center gap-2 mb-3">
+              {/* Week · Day row */}
+              {(selected.week || selected.day_name) && (
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   <span
                     className="text-xs font-semibold uppercase tracking-wide"
                     style={{ color: "#9C8270", letterSpacing: "0.06em" }}
                   >
-                    Day
+                    Schedule
                   </span>
-                  <span
-                    className="text-xs font-medium px-2.5 py-1 rounded-full"
-                    style={{ backgroundColor: "#EDE4D8", color: "#4A3728" }}
-                  >
-                    {selected.day_name}
-                  </span>
+                  {selected.week && (
+                    <span
+                      className="text-xs font-medium px-2.5 py-1 rounded-full"
+                      style={{ backgroundColor: "#EDE4D8", color: "#4A3728" }}
+                    >
+                      Week {selected.week}
+                    </span>
+                  )}
+                  {selected.day_name && (
+                    <span
+                      className="text-xs font-medium px-2.5 py-1 rounded-full"
+                      style={{ backgroundColor: "#EDE4D8", color: "#4A3728" }}
+                    >
+                      Day {selected.day_name}
+                    </span>
+                  )}
                 </div>
               )}
 
-              {/* Description */}
+              {/* topic */}
               <div className="mb-3">
                 <p
-                  className="text-xs font-semibold uppercase tracking-wide mb-1.5"
+                  className="text-xs font-semibold uppercase tracking-wide mb-2"
                   style={{ color: "#9C8270", letterSpacing: "0.06em" }}
                 >
                   Topic
                 </p>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "#3D2A1E" }}
-                >
-                  {selected.description || (
-                    <span className="italic" style={{ color: "#B09880" }}>
-                      No description provided.
-                    </span>
-                  )}
-                </p>
+                {selected.topic ? (
+                  <ul className="space-y-1.5">
+                    {selected.topic
+                      .split(/\n|•|-/)
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                      .map((line, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-sm leading-relaxed"
+                        >
+                          <span
+                            className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: "#C9B39E" }}
+                          />
+                          <span style={{ color: "#3D2A1E" }}>{line}</span>
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <span className="text-sm italic" style={{ color: "#B09880" }}>
+                    No topic provided.
+                  </span>
+                )}
               </div>
 
               {/* Link */}
